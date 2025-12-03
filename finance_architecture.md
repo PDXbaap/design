@@ -65,7 +65,7 @@ Let's use a two party coion swap example to illustrate how it works with privacy
   {
     "type": "confirmation_request",
     "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1fe0",
-    "timestamp": "{chain_id}.{block.timestamp}.{tx_idx}"
+    "timestamp": "{chain_id}.{block.timestamp}.{tx_idx}",
     "parties": [
         {"uuid": "af627cae-eee9-47e9-aa6a-5ae9435b1feA"},
         {"uuid": "af627cae-eee9-47e9-aa6a-5ae9435b1feB"},
