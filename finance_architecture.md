@@ -36,6 +36,7 @@ Let's use a two party coion swap example to illustrate how it works with privacy
 2. The *service-x @ a* by configuration (or via *contract reg* smart contract) finds that *B coin* is via *institution (b)*, so it's a cross-institution transaction, so it calls its *x-chain mediator* with all information needed
 3. The *x-chain mediator* @ *institution (a)* optionally calls its *messaging* @ *institution (a)* to send confidential data (e.g. detailed terms) to *institution (b)*. The following is a multipart example:
    ```
+   json
    Content-Type: multipart/form-data; boundary=----~~~~~~~~~~
 
    ----~~~~~~~~~~
@@ -46,12 +47,13 @@ Let's use a two party coion swap example to illustrate how it works with privacy
       "method": "txdata_push",
       "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1feI,
       "attn": "uuid-of-institution",
-      "data": "simple text data",
-      "blob": ["part-1"]
+      "algo": "",
+      "data": "simple data (possibly base-64 encoded)",
+      "blob": ["extra_part"]
    }
    ----~~~~~~~~~~
    Content-Type: application/octet-stream
-   Content-Disposition: form-data; name="part_1"
+   Content-Disposition: form-data; name="extra_part"
    Content-Length: [length of raw data]
       [...RAW BYTES GO HERE, NO ENCODING...]
    ----~~~~~~~~~~
