@@ -22,9 +22,13 @@ PDX Utopia blockchain is fully compliant with Ethereum EVM and its web3 API. Bes
   
 3. *Parallel TX processing* Transactions destined for unrelated smart contracts are processed in parallel; related smart contracts auto-organized into a "smart contract cluster".
 
-## Option 1: On Ethereum 
+## Option 1: On L1 chain 
 
 ![plot](./x-chain-finance-architecture.png)
+
+This architecture is meant to work even with public L1 blockchains (e.g. Ethereum) as the *mediation chain*, due to the fact no customization or patching of blockchain platform is needed to make it work.
+
+There could have a tree of *mediation chain*s. As long as all stakeholders of a *mediation transaction* share the same "parent" *mediation chain*, this architecture would work, just "chain" the *sequencer*s all the way up to the one on "parent" *mediation chain*, and "chain" the *mediator*s all the way down to the one on each *mediation chain* that directly connects the respective stakeholders.
 
 Let's use a two party coion swap example to illustrate how it works with privacy and confidentiality protection of all stakeholders. In this example, Alice and Bob have mutually decided to swap Alice's $a of A coin with Bob's $b of B coin, the following is the workflow on this architecture:
 
@@ -46,7 +50,7 @@ Let's use a two party coion swap example to illustrate how it works with privacy
        }
      ]
    ```
-4. The *x-chain mediator* @ *institution (a)* sends a *mediation transaction* (*tx-1*) (using its *signing key*) to *mediation chain*'s *sequencer* smart contract
+4. The *x-chain mediator* @ *institution (a)* sends a *mediation transaction* (*tx-{x}*) (using its *signing key*) to *mediation chain*'s *sequencer* smart contract
   ```
   {
     "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1fe0",
@@ -60,7 +64,7 @@ Let's use a two party coion swap example to illustrate how it works with privacy
   }
   ```
 6. After checking with *identity* smart contract for authorization, the *sequencer* smart contract automatically timestamps, sequences *tx-1* and calls the *mediator* smart contract.
-7. The *mediator* smart contract, emit a *confirmation request* event for each party specified in the *mediation transaction* (*tx-1*)
+7. The *mediator* smart contract, emit a *confirmation request* event for each party specified in the *mediation transaction* (*tx-{x}*)
   ```
   {
     "type": "confirmation_request",
@@ -73,9 +77,10 @@ Let's use a two party coion swap example to illustrate how it works with privacy
   }
   ```
 9. The *x-chain mediator* on all stakeholders of the *mediation transaction* receives the above *confirmation request*, then calls the prep_transact method of its *local execuator* respectively.  
-10. Each *x-chain mediator* of the stakeholders of the *mediatation transaction* (*tx-1*), gets the optional confidential data from its local *messaging* service by ref id, then calls its *local executor* to check authorization and fesibility and return vote (Y/N), possibly time-locks the per-contract state for commit.
-11. Each *x-chain mediator* of the stakeholders, sends a *confirmation response* (*tx-2*) to the *mediator* smart contract on the *mediation chain*
-12. The *mediator* smart contract on the *mediation chain*, after receiving enough consensus on *tx-1*, emits a *execution request* event to all stakeholders. If not enough consensus, emit *mediation_aborted".
+10. Each *x-chain mediator* of the stakeholders of the *mediatation transaction* (*tx-{x}*), gets the optional confidential data from its local *messaging* service by ref id, then calls its *local executor* to check authorization and fesibility and return vote (Y/N), possibly time-locks the per-contract state for commit.
+11. Each *x-chain mediator* of the stakeholders, sends a *confirmation response* (*tx-{x}.0*) to the *mediator* smart contract on the *mediation chain*
+12. The *mediator* smart contract on the *mediation chain*, after receiving enough consensus on *tx-{x}*, emits a *execution request* event to all stakeholders. If not enough consensus, emit *mediation_aborted".
 13. The *x-chain mediator* on all stakeholders of the *mediation transaction* receives the above *execution request* event, then calls the commit_transact method of its *local execuator* respectively and returns with the per-contract state root and opportioanlly a zero-knowledge proof (by calling its *zk_prover*).
-14. The *x-chain mediator* on all stakeholders sends a *execution response* (*tx-3*) to the *mediator* smart contract on the *mediation chain*.
-15. The *mediator* smart contract on the *mediation chain*, after receiving all necessary *execution responses*, mark the *mediation transaction* as finished and emmits *mediation succeeded* event.
+14. The *x-chain mediator* on all stakeholders sends a *execution response* (*tx-{x}.1*) to the *mediator* smart contract on the *mediation chain*.
+15. The *mediator* smart contract on the *mediation chain*, after receiving all necessary *execution responses*, marks the *mediation transaction* as finished and emmits *mediation succeeded* event.
+16. The *x-chain mediator* on *institution (a)* and *institution (b)* receives the *mediation succeeded* event, forwards it to the *service-x @ a* and *service-x @ b*, which respectively notifies Alice and Bob of the status.
