@@ -63,7 +63,7 @@ Let's use a two party coion swap example to illustrate how it works with privacy
 7. The *mediator* smart contract, emit a *confirmation request* event for each party specified in the *mediation transaction* (*tx-1*)
    ```
   {
-    "type": "conformation_request",
+    "type": "confirmation_request",
     "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1fe0",
     "timestamp": "{chain_id}.{block.timestamp}.{tx_idx}"
     "parties": [
@@ -73,8 +73,9 @@ Let's use a two party coion swap example to illustrate how it works with privacy
     }
    ```
 9. The *x-chain mediator* on all stakeholders of the *mediation transaction* receives the above *confirmation request*, then calls the prep_transact method of its *local execuator* respectively.  
-10. Each *x-chain mediator* of the stakeholders of the *mediatation transaction* (*tx-1*), gets the optional confidential data from its local *messaging* service by ref id, then calls its *local executor* to execute it.
-     
-
-  
-```
+10. Each *x-chain mediator* of the stakeholders of the *mediatation transaction* (*tx-1*), gets the optional confidential data from its local *messaging* service by ref id, then calls its *local executor* to check authorization and fesibility and return vote (Y/N), possibly time-locks the per-contract state for commit.
+11. Each *x-chain mediator* of the stakeholders, sends a *confirmation response* (*tx-2*) to the *mediator* smart contract on the *mediation chain*
+12. The *mediator* smart contract on the *mediation chain*, after receiving enough consensus on *tx-1*, emits a *execution request* event to all stakeholders. If not enough consensus, emit *mediation_aborted".
+13. The *x-chain mediator* on all stakeholders of the *mediation transaction* receives the above *execution request* event, then calls the commit_transact method of its *local execuator* respectively and returns with the per-contract state root and opportioanlly a zero-knowledge proof (by calling its *zk_prover*).
+14. The *x-chain mediator* on all stakeholders sends a *execution response* (*tx-3*) to the *mediator* smart contract on the *mediation chain*.
+15. The *mediator* smart contract on the *mediation chain*, after receiving all necessary *execution responses*, mark the *mediation transaction* as finished and emmits *mediation succeeded* event.
