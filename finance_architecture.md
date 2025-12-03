@@ -33,7 +33,7 @@ Let's use a two party coion swap example to illustrate how it works with privacy
 3. The *x-chain mediator* @ *institution (a)* optionally calls its *messaging* @ *institution (a)* to send confidential data (e.g. detailed terms) to *institution (b)*
    ```
    {
-     "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1fea,
+     "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1feI,
      [
        {
           "attn": "institution (b)",
@@ -49,11 +49,31 @@ Let's use a two party coion swap example to illustrate how it works with privacy
 4. The *x-chain mediator* @ *institution (a)* sends a *mediation transaction* (*tx-1*) (using its *signing key*) to *mediation chain*'s *sequencer* smart contract
   ```
   {
+    "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1fe0",
+    "timestamp": "{block.timestamp}.{tx_idx}@{chain_id}"
+    "parent":  "af627cae-eee9-47e9-aa6a-5ae9435b1fe0",
+    "precond": [],
+    "parties": [
+        {"uuid": "af627cae-eee9-47e9-aa6a-5ae9435b1feA"},
+        {"uuid": "af627cae-eee9-47e9-aa6a-5ae9435b1feB"},
+    ]
   }
   ```
 6. After checking with *identity* smart contract for authorization, the *sequencer* smart contract automatically timestamps, sequences *tx-1* and calls the *mediator* smart contract.
-7. 
-8. 
+7. The *mediator* smart contract, emit a *confirmation request* event for each party specified in the *mediation transaction* (*tx-1*)
+   ```
+  {
+    "type": "conformation_request",
+    "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1fe0,
+    "timestamp": "{chain_id}.{block.timestamp}.{tx_idx}"
+    "parties": [
+        {"uuid": "af627cae-eee9-47e9-aa6a-5ae9435b1feA"},
+        {"uuid": "af627cae-eee9-47e9-aa6a-5ae9435b1feB"},
+      ]
+    }
+   ```
+9. The *x-chain mediator* on all stakeholders of the *mediation transaction* receives the above *confirmation request*, then calls the prep_transact method of its *local execuator* respectively.  
+10. Each *x-chain mediator* of the stakeholders of the *mediatation transaction* (*tx-1*), gets the optional confidential data from its local *messaging* service by ref id, then calls its *local executor* to execute it.
      
 
   
