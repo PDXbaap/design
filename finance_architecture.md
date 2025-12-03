@@ -61,7 +61,7 @@ Let's use a two party coion swap example to illustrate how it works with privacy
   ```
 6. After checking with *identity* smart contract for authorization, the *sequencer* smart contract automatically timestamps, sequences *tx-1* and calls the *mediator* smart contract.
 7. The *mediator* smart contract, emit a *confirmation request* event for each party specified in the *mediation transaction* (*tx-1*)
-   ```
+  ```
   {
     "type": "confirmation_request",
     "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1fe0",
@@ -70,8 +70,8 @@ Let's use a two party coion swap example to illustrate how it works with privacy
         {"uuid": "af627cae-eee9-47e9-aa6a-5ae9435b1feA"},
         {"uuid": "af627cae-eee9-47e9-aa6a-5ae9435b1feB"},
       ]
-    }
-   ```
+  }
+  ```
 9. The *x-chain mediator* on all stakeholders of the *mediation transaction* receives the above *confirmation request*, then calls the prep_transact method of its *local execuator* respectively.  
 10. Each *x-chain mediator* of the stakeholders of the *mediatation transaction* (*tx-1*), gets the optional confidential data from its local *messaging* service by ref id, then calls its *local executor* to check authorization and fesibility and return vote (Y/N), possibly time-locks the per-contract state for commit.
 11. Each *x-chain mediator* of the stakeholders, sends a *confirmation response* (*tx-2*) to the *mediator* smart contract on the *mediation chain*
