@@ -22,33 +22,39 @@ PDX Utopia blockchain is fully compliant with Ethereum EVM and its web3 API. Bes
   
 3. *Parallel TX processing* Transactions destined for unrelated smart contracts are processed in parallel; related smart contracts auto-organized into a "smart contract cluster".
 
-## Option 1: On L1 chain 
+## Option 1: On Blockchain 
 
 ![plot](./x-chain-finance-architecture.png)
 
-This architecture is meant to work even with public L1 blockchains (e.g. Ethereum) as the *mediation chain*, due to the fact no customization or patching of blockchain platform is needed to make it work.
+This architecture is meant to work via not only **consortium blockchain**s but also **public blockchain**s (e.g. Ethereum) as the *mediation chain*, due to the fact no customization or patching of blockchain platform is needed to make it work.
 
 There could have a tree of *mediation chain*s. As long as all stakeholders of a *mediation transaction* share the same "parent" *mediation chain*, this architecture would work, just "chain" the *sequencer*s all the way up to the one on "parent" *mediation chain*, and "chain" the *mediator*s all the way down to the one on each *mediation chain* that directly connects the respective stakeholders.
 
 Let's use a two party coion swap example to illustrate how it works with privacy and confidentiality protection of all stakeholders. In this example, Alice and Bob have mutually decided to swap Alice's $a of A coin with Bob's $b of B coin, the following is the workflow on this architecture:
 
 1. Alice initiates a coin swap with Bob via its service, *service-x @ a* provided by her institution, *institution (a)*
-2. The *service-x @ a* by configuration finds that *B coin* is via *institution (b)*, so it's a cross-institution transaction, so it calls its *x-chain mediator* with all information needed
-3. The *x-chain mediator* @ *institution (a)* optionally calls its *messaging* @ *institution (a)* to send confidential data (e.g. detailed terms) to *institution (b)*
+2. The *service-x @ a* by configuration (or via *contract reg* smart contract) finds that *B coin* is via *institution (b)*, so it's a cross-institution transaction, so it calls its *x-chain mediator* with all information needed
+3. The *x-chain mediator* @ *institution (a)* optionally calls its *messaging* @ *institution (a)* to send confidential data (e.g. detailed terms) to *institution (b)*. The following is a multipart example:
    ```
+   Content-Type: multipart/form-data; boundary=----~~~~~~~~~~
+
+   ----~~~~~~~~~~
+   Content-Type: application/json
+   Content-Disposition: form-data; name="json_rpc_req"
    {
-     "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1feI,
-     [
-       {
-          "attn": "institution (b)",
-          "data": "bob->alice $b of B coin",
-          "authz": {
-                     "signer": "bob's key",
-                     "salt": "...",
-                     "sig": "....
-                   }
-       }
-     ]
+      "jsonrpc": "2.0",
+      "method": "txdata_push",
+      "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1feI,
+      "attn": "uuid-of-institution",
+      "data": "simple text data",
+      "blob": ["part-1"]
+   }
+   ----~~~~~~~~~~
+   Content-Type: application/octet-stream
+   Content-Disposition: form-data; name="part_1"
+   Content-Length: [length of raw data]
+      [...RAW BYTES GO HERE, NO ENCODING...]
+   ----~~~~~~~~~~
    ```
 4. The *x-chain mediator* @ *institution (a)* sends a *mediation transaction* (*tx-{x}*) (using its *signing key*) to *mediation chain*'s *sequencer* smart contract
   ```
