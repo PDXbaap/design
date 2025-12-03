@@ -25,7 +25,35 @@ PDX Utopia blockchain is fully compliant with Ethereum EVM and its web3 API. Bes
 ## Option 1: On Ethereum 
 
 ![plot](./x-chain-finance-architecture.png)
-    
+
+Let's use a two party coion swap example to illustrate how it works with privacy and confidentiality protection of all stakeholders. In this example, Alice and Bob have mutually decided to swap Alice's $a of A coin with Bob's $b of B coin, the following is the workflow on this architecture:
+
+1. Alice initiates a coin swap with Bob via its service, *service-x @ a* provided by her institution, *institution (a)*
+2. The *service-x @ a* by configuration finds that *B coin* is via *institution (b)*, so it's a cross-institution transaction, so it calls its *x-chain mediator* with all information needed
+3. The *x-chain mediator* @ *institution (a)* optionally calls its *messaging* @ *institution (a)* to send confidential data (e.g. detailed terms) to *institution (b)*
+   ```
+   {
+     "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1fea,
+     [
+       {
+          "attn": "institution (b)",
+          "data": "bob->alice $b of B coin",
+          "authz": {
+                     "signer": "bob's key",
+                     "salt": "...",
+                     "sig": "....
+                   }
+       }
+     ]
+   ```
+4. The *x-chain mediator* @ *institution (a)* sends a *mediation transaction* (*tx-1*) (using its *signing key*) to *mediation chain*'s *sequencer* smart contract
+  ```
+  {
+  }
+  ```
+6. After checking with *identity* smart contract for authorization, the *sequencer* smart contract automatically timestamps, sequences *tx-1* and calls the *mediator* smart contract.
+7. 
+8. 
      
 
   
