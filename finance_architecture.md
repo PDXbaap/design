@@ -26,6 +26,13 @@ PDX Utopia blockchain is fully compliant with Ethereum EVM and its web3 API. Bes
 
 ![plot](./x-chain-finance-architecture.png)
 
+```mermaid
+actor Alice
+actor Bob
+participant Service
+ 
+```
+
 This architecture is meant to work via not only **consortium blockchain**s but also **public blockchain**s (e.g. Ethereum) as the *mediation chain*, due to the fact no customization or patching of blockchain platform is needed to make it work.
 
 There could have a tree of *mediation chain*s. As long as all stakeholders of a *mediation transaction* share the same "parent" *mediation chain*, this architecture would work, just "chain" the *sequencer*s all the way up to the one on "parent" *mediation chain*, and "chain" the *mediator*s all the way down to the one on each *mediation chain* that directly connects the respective stakeholders.
