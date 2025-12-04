@@ -35,7 +35,7 @@ end
 box Institutions
 participant Service
 participant X_chain_Mediator@{"type": "control"}
-participant Local Execuator
+participant Local Executor
 participant State@{"type": "database"}
 participant Prover
 participant Messaging
