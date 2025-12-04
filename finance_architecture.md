@@ -30,6 +30,8 @@ PDX Utopia blockchain is fully compliant with Ethereum EVM and its web3 API. Bes
 sequenceDiagram
 actor Alice
 actor Bob
+participant Identity
+participant Topology
 participant Service
 participant X-chain Mediator
 participant Sequencer
@@ -39,9 +41,11 @@ participant Per-contract state
 participant messaging
 
 Alice -->> Service: initiate coin swap
-Service -->> X-chain Mediator: mediation request
+Service -->> X-chain Mediator: request for cross-institution mediation
 X-chain Mediator -->> X-chain Mediator: create & sign mediation tx
- 
+X-chain Mediator -->> Sequencer: mediation tx
+Sequencer --> Identity: check authorization
+Sequencer --> Topology: find mediation chain 
 ```
 
 This architecture is meant to work via not only **consortium blockchain**s but also **public blockchain**s (e.g. Ethereum) as the *mediation chain*, due to the fact no customization or patching of blockchain platform is needed to make it work.
