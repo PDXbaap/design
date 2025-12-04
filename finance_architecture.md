@@ -36,7 +36,6 @@ Let's use a two party coion swap example to illustrate how it works with privacy
 2. The *service-x @ a* by configuration (or via *contract reg* smart contract) finds that *B coin* is via *institution (b)*, so it's a cross-institution transaction, so it calls its *x-chain mediator* with all information needed
 3. The *x-chain mediator* @ *institution (a)* optionally calls its *messaging* @ *institution (a)* to send confidential data (e.g. detailed terms) to *institution (b)*. The following is a multipart example:
    ```
-   json
    Content-Type: multipart/form-data; boundary=----~~~~~~~~~~
 
    ----~~~~~~~~~~
@@ -45,7 +44,7 @@ Let's use a two party coion swap example to illustrate how it works with privacy
    {
       "jsonrpc": "2.0",
       "method": "txdata_push",
-      "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1feI,
+      "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1fea,
       "attn": "uuid-of-institution",
       "algo": "",
       "data": "simple data (possibly base-64 encoded)",
@@ -58,11 +57,11 @@ Let's use a two party coion swap example to illustrate how it works with privacy
       [...RAW BYTES GO HERE, NO ENCODING...]
    ----~~~~~~~~~~
    ```
+   Note: extra protection other than TLS *may* be needed in production.
 4. The *x-chain mediator* @ *institution (a)* sends a *mediation transaction* (*tx-{x}*) (using its *signing key*) to *mediation chain*'s *sequencer* smart contract
   ```
   {
-    "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1fe0",
-    "timestamp": "{block.timestamp}.{tx_idx}@{chain_id}"
+    "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1fea",
     "parent":  "af627cae-eee9-47e9-aa6a-5ae9435b1fe0",
     "precond": [],
     "parties": [
@@ -71,24 +70,81 @@ Let's use a two party coion swap example to illustrate how it works with privacy
     ]
   }
   ```
-6. After checking with *identity* smart contract for authorization, the *sequencer* smart contract automatically timestamps, sequences *tx-1* and calls the *mediator* smart contract.
-7. The *mediator* smart contract, emit a *confirmation request* event for each party specified in the *mediation transaction* (*tx-{x}*)
+Note: party id better be some integer format with scheme for performance reasons.
+5. After checking with *identity* smart contract for authorization, the *sequencer* smart contract automatically timestamps, sequences *tx-{x}* and calls the *mediator* smart contract.
   ```
   {
-    "type": "confirmation_request",
     "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1fe0",
-    "timestamp": "{chain_id}.{block.timestamp}.{tx_idx}",
+    "parent":  "af627cae-eee9-47e9-aa6a-5ae9435b1fe0",
+    "precond": [], # tx dependencies, not for sensitive data
     "parties": [
         {"uuid": "af627cae-eee9-47e9-aa6a-5ae9435b1feA"},
         {"uuid": "af627cae-eee9-47e9-aa6a-5ae9435b1feB"},
-      ]
+    ],
+    "timestamp": "{chain_id}.{block.timestamp}.{tx_idx}",
   }
   ```
-9. The *x-chain mediator* on all stakeholders of the *mediation transaction* receives the above *confirmation request*, then calls the prep_transact method of its *local execuator* respectively.  
-10. Each *x-chain mediator* of the stakeholders of the *mediatation transaction* (*tx-{x}*), gets the optional confidential data from its local *messaging* service by ref id, then calls its *local executor* to check authorization and fesibility and return vote (Y/N), possibly time-locks the per-contract state for commit.
-11. Each *x-chain mediator* of the stakeholders, sends a *confirmation response* (*tx-{x}.0*) to the *mediator* smart contract on the *mediation chain*
-12. The *mediator* smart contract on the *mediation chain*, after receiving enough consensus on *tx-{x}*, emits a *execution request* event to all stakeholders. If not enough consensus, emit *mediation_aborted".
-13. The *x-chain mediator* on all stakeholders of the *mediation transaction* receives the above *execution request* event, then calls the commit_transact method of its *local execuator* respectively and returns with the per-contract state root and opportioanlly a zero-knowledge proof (by calling its *zk_prover*).
-14. The *x-chain mediator* on all stakeholders sends a *execution response* (*tx-{x}.1*) to the *mediator* smart contract on the *mediation chain*.
-15. The *mediator* smart contract on the *mediation chain*, after receiving all necessary *execution responses*, marks the *mediation transaction* as finished and emmits *mediation succeeded* event.
-16. The *x-chain mediator* on *institution (a)* and *institution (b)* receives the *mediation succeeded* event, forwards it to the *service-x @ a* and *service-x @ b*, which respectively notifies Alice and Bob of the status.
+6. The *mediator* smart contract, emits a *commit_prep_request* event for each party specified in the *mediation transaction* (*tx-{x}*)
+  ```
+  {
+    "type": "commit_prep_request",
+    "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1fe0",
+    "parent":  "af627cae-eee9-47e9-aa6a-5ae9435b1fe0",
+    "precond": [], # tx dependencies, not for sensitive data
+    "parties": [
+        {"uuid": "af627cae-eee9-47e9-aa6a-5ae9435b1feA"},
+        {"uuid": "af627cae-eee9-47e9-aa6a-5ae9435b1feB"},
+      ],
+    "timestamp": "{chain_id}.{block.timestamp}.{tx_idx}",
+  }
+  ```
+8. The *x-chain mediator* on all stakeholders of the *mediation transaction* receives the above *commit_prep_request* event, then calls the prep_commit method of its *local execuator* respectively.
+9. Each *x-chain mediator* of the stakeholders of the *mediatation transaction* (*tx-{x}*), gets the optional confidential data from its local *messaging* service by ref id, then calls its *local executor* to check authorization and fesibility and return vote (Y/N), possibly time-locks the per-contract state for commit.  
+10. Each *x-chain mediator* of the stakeholders, sends a *commit_prep_response* (*tx-{x}.0*) to the *mediator* smart contract on the *mediation chain*
+  ```
+  {
+    "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1fea",
+    "type": "commit_prep_response",
+    "vote": "YES | NO",
+    "stat": "SHA3 of per-contract state root", # optional
+    "proof": "zero knowledge proof", # optional
+    "parties": [ # unless deligated, only one tied to signing key will be taken.
+        {"uuid": "af627cae-eee9-47e9-aa6a-5ae9435b1feA"},
+        {"uuid": "af627cae-eee9-47e9-aa6a-5ae9435b1feB"},
+    ]
+  }
+  ```
+11. The *mediator* smart contract on the *mediation chain*, after receiving enough consensus on *tx-{x}*, emits a *commit_exec_request* event to all stakeholders. If not enough consensus, emit *commit_exec_failed".
+```
+{
+    "type": "commit_exec_request",
+    "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1fe0",
+    "parties": [ # votes, details on chain
+        {"uuid": "af627cae-eee9-47e9-aa6a-5ae9435b1feA"},
+        {"uuid": "af627cae-eee9-47e9-aa6a-5ae9435b1feB"},
+      ],
+  }
+```
+12. The *x-chain mediator* on all stakeholders of the *mediation transaction* receives the above *commit_exec_request* event, then calls the exec_commit method of its *local execuator* respectively and returns with the per-contract state root and opportioanlly a zero-knowledge proof (by calling its *zk_prover*).
+
+13. The *x-chain mediator* on all stakeholders sends a *commit_exec_response* (*tx-{x}.1*) to the *mediator* smart contract on the *mediation chain*.
+```
+{
+    "type": "commit_exec_response",
+    "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1fe0",
+    "stat": "SHA3 of per-contract state root", # optional
+    "proof": "zero knowledge proof", # optional
+    "parties": [ # unless deligated, only one tied to signing key will be taken.
+        {"uuid": "af627cae-eee9-47e9-aa6a-5ae9435b1feA"},
+        {"uuid": "af627cae-eee9-47e9-aa6a-5ae9435b1feB"},
+    ]
+  }
+```
+14. The *mediator* smart contract on the *mediation chain*, after receiving all necessary *commit_exec_response*, marks the *mediation transaction* as finished and emmits *mediation succeeded* event.
+```
+{
+    "type": "commit_exec_succeeded",
+    "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1fe0",
+}
+```   
+15. The *x-chain mediator* on *institution (a)* and *institution (b)* receives the *commit_exec_succeeded* event, forwards it to the *service-x @ a* and *service-x @ b*, which respectively notifies Alice and Bob of the status.
