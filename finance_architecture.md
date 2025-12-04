@@ -46,10 +46,10 @@ participant Topology
 participant Sequencer@{"type": "queue"}
 participant Mediator@{"type": "control"}
 end
-Alice --> Bob: get Bob's conditional authorization
+Alice -->> Bob: get Bob's conditional authorization
 Alice -->> Service: initiate coin swap
 Service -->> X_chain_Mediator: request for cross-institution mediation
-X_chain_Mediator -->> Messaging: confidential data for mediation tx
+X_chain_Mediator -->> Messaging: confidential data for mediation tx with end2end security
 X_chain_Mediator -->> X_chain_Mediator: create & sign mediation tx
 X_chain_Mediator -->> Sequencer: mediation tx
 Sequencer -->> Identity: check authorization
