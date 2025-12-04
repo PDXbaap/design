@@ -48,28 +48,28 @@ participant Mediator@{"type": "control"}
 end
 Alice --> Bob: get Bob's conditional authorization
 Alice -->> Service: initiate coin swap
-Service -->> X-chain Mediator: request for cross-institution mediation
-X-chain Mediator -->> Messaging: confidential data for mediation tx
-X-chain Mediator -->> X-chain Mediator: create & sign mediation tx
-X-chain Mediator -->> Sequencer: mediation tx
+Service -->> X_chain_Mediator: request for cross-institution mediation
+X_chain_Mediator -->> Messaging: confidential data for mediation tx
+X_chain_Mediator -->> X_chain_Mediator: create & sign mediation tx
+X_chain_Mediator -->> Sequencer: mediation tx
 Sequencer -->> Identity: check authorization
 Sequencer -->> Topology: find mediation chain
 Sequencer -->> Sequencer: timestamp & sequence mediation tx
 Sequencer -->> Mediator: sequenced mediation transaction
-Mediator -->> X-chain Mediator: commit_prep request
-X-chain_Mediator -->> Messaging: get confidential data
-X-chain_Mediator -->> Local Executor: execute without commit
-Local Executor -->> X-chain Mediator: commit prep result
-X-chain_Mediator -->> Mediator: commit_prep response
+Mediator -->> X_chain_Mediator: commit_prep request
+X_chain_Mediator -->> Messaging: get confidential data
+X_chain_Mediator -->> Local Executor: execute without commit
+Local Executor -->> X_chain_Mediator: commit prep result
+X_chain_Mediator -->> Mediator: commit_prep response
 Mediator -->> Mediator: collect commit_prep responses util decision threshold
-Mediator -->> X-chain_Mediator: emit commit_exec request
-X-chain_Mediator -->> Local Executor: commit tx
+Mediator -->> X_chain_Mediator: emit commit_exec request
+X_chain_Mediator -->> Local Executor: commit tx
 Local Executor -->> Prover: generate proof
-Local Executor -->> X-chain Mediator: status, per-contract state root, zero-knowledge proof
+Local Executor -->> X_chain_Mediator: status, per-contract state root, zero-knowledge proof
 Local Executor -->> State: commit per-contract state
-X-chain_Mediator -->> Mediator: commit_exec response
-Mediator -->> X-chain_Mediator: emit commit_exec_succeeded or commit_exec_failed event
-X-chain_Mediator -->> Service: mediation tx result
+X_chain_Mediator -->> Mediator: commit_exec response
+Mediator -->> X_chain_Mediator: emit commit_exec_succeeded or commit_exec_failed event
+X_chain_Mediator -->> Service: mediation tx result
 Service -->> Alice: coin swap result
 Service --> Bob: coin swap result
 ```
