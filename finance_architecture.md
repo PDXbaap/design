@@ -31,6 +31,13 @@ sequenceDiagram
 actor Alice
 actor Bob
 participant Service
+participant X-chain Mediator
+participant Sequencer
+participant Mediator
+participant Local execuator
+participant Per-contract state
+participant messaging
+
  
 ```
 
