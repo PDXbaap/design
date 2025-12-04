@@ -32,15 +32,15 @@ box Users
 actor Alice
 actor Bob
 end
+box Institutions
 participant Service
-box Participants
 participant X-chain Mediator
 participant Local Execuator
 participant State@{"type": "database"}
 participant Prover
 participant Messaging
 end
-box Blockchains: 
+box Mediation Blockchains
 participant Identity
 participant Topology
 participant Sequencer
