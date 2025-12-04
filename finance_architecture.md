@@ -36,7 +36,7 @@ participant Service
 box Participants
 participant X-chain Mediator
 participant Local Execuator
-participant "Per-contract State"@{"type": "database"}
+participant State@{"type": "database"}
 participant Prover
 participant Messaging
 end
