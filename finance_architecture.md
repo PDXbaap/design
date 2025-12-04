@@ -46,7 +46,7 @@ participant Topology
 participant Sequencer
 participant Mediator
 end
-
+Alice --> Bob: get Bob's conditional authorization
 Alice -->> Service: initiate coin swap
 Service -->> X-chain Mediator: request for cross-institution mediation
 X-chain Mediator -->> Messaging: confidential data for mediation tx
