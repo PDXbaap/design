@@ -64,9 +64,9 @@ X_chain_Mediator -->> Mediator: commit_prep response
 Mediator -->> Mediator: collect commit_prep responses util decision threshold
 Mediator -->> X_chain_Mediator: emit commit_exec request
 X_chain_Mediator -->> Local Executor: commit tx
+Local Executor -->> State: commit per-contract state
 Local Executor -->> Prover: generate proof
 Local Executor -->> X_chain_Mediator: status, per-contract state root, zero-knowledge proof
-Local Executor -->> State: commit per-contract state
 X_chain_Mediator -->> Mediator: commit_exec response
 Mediator -->> X_chain_Mediator: emit commit_exec_succeeded or commit_exec_failed event
 X_chain_Mediator -->> Service: mediation tx result
