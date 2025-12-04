@@ -1,3 +1,6 @@
+## A & B gets SRC coin as usual
+From existing SRC coin holders directly or via exchange.
+
 ## Alice creates DST blockchain
 
 ```mermaid
@@ -10,11 +13,11 @@ end
 participant facilitator
 participant dst_chain
 
-Alice -->> src_vault: approve to burn $x (by facilitator f) for DST chain @ 1.1.1.1
-src_vault --> facilitator: burn approval
-Alice -->> dst_chain: create blockchain with total of $x coins
+Alice -->> src_vault: approve to freeze $x (by facilitator f) for DST chain @ 1.1.1.1
+src_vault --> facilitator: freeze approval
+Alice -->> dst_chain: create blockchain with total of $x coins (with minting disabled)
 dst_chain -->> facilitator: genesis block created
-facilitator --> src_vault: burn and record DST chain at 1.1.1.1 
+facilitator --> src_vault: freeze and record DST chain at 1.1.1.1 
 ```
 
 ## Bob gets DST coin from Alice 
@@ -44,5 +47,7 @@ facilitator -->> src_vault: transfter $x of coin SRC to Alice
 src_vault -->> Alice: received $x of coin SRC from Bob 
 facilitator -->> dst_vault: transfter $x of coin DST to Bob
 dst_vault -->> Bob: received $x of coin DST from Alice
-
 ```
+## Burn on DST and de-freeze on SRC
+Since DST chain has minting disabled, simply burn Charlie has on DST, and de-freeze the same amount from what Alice has been freezed.
+If DST chain has minting enabled, just simply disallow this scenario to avoid DST illegally generating SRC coins.
