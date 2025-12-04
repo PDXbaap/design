@@ -62,6 +62,9 @@ Local Executor -->> Prover: generate proof
 Local Executor -->> X-chain Mediator: status, per-contract state root, zero-knowledge proof
 X-chain Mediator -->> Mediator: commit_exec response
 Mediator -->> X-chain Mediator: emit commit_exec_succeeded or commit_exec_failed event
+X-chain Mediator -->> Service: mediation tx result
+Service -->> Alice: coin swap result
+Service --> Bob: coin swap result
 ```
 
 This architecture is meant to work via not only **consortium blockchain**s but also **public blockchain**s (e.g. Ethereum) as the *mediation chain*, due to the fact no customization or patching of blockchain platform is needed to make it work.
