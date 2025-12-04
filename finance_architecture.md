@@ -27,6 +27,7 @@ PDX Utopia blockchain is fully compliant with Ethereum EVM and its web3 API. Bes
 ![plot](./x-chain-finance-architecture.png)
 
 ```mermaid
+sequenceDiagram
 actor Alice
 actor Bob
 participant Service
