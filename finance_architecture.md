@@ -38,6 +38,7 @@ participant Local execuator
 participant Per-contract state
 participant messaging
 
+Alice ->> Service: initiate coin swap
  
 ```
 
