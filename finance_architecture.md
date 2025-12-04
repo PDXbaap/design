@@ -38,8 +38,9 @@ participant Local execuator
 participant Per-contract state
 participant messaging
 
-Alice ->> Service: initiate coin swap
-Service -->> X-chain Mediator: mediation transaction
+Alice -->> Service: initiate coin swap
+Service -->> X-chain Mediator: mediation request
+X-chain Mediator -->> X-chain Mediator: create & sign mediation tx
  
 ```
 
