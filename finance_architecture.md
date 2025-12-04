@@ -39,6 +39,7 @@ participant Per-contract state
 participant messaging
 
 Alice ->> Service: initiate coin swap
+Service -->> X-chain Mediator: mediation transaction
  
 ```
 
