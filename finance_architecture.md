@@ -51,7 +51,7 @@ Sequencer --> Topology: find mediation chain
 Sequencer --> Sequencer: timestamp & sequence mediation tx
 Sequencer --> Mediator: timestamped mediation transaction
 Mediator --> X-chain Mediator: commit_prep request
-X-chain Mediator: Messaging: get confidential data
+X-chain Mediator --> Messaging: get confidential data
 X-chain Mediator --> Local Executor: execute without commit
 Local Executor --> X-chain Mediator: commit prep result
 X-chain Mediator --> Mediator: commit_prep response
