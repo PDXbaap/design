@@ -74,17 +74,17 @@ Service -->> Alice: coin swap result
 Service --> Bob: coin swap result
 ```
 
-This architecture is meant to work via not only **consortium blockchain**s but also **public blockchain**s (e.g. Ethereum) as the *mediation chain*, due to the fact no customization or patching of blockchain platform is needed to make it work.
+This architecture is meant to work via not only **consortium blockchain**s but also **public blockchain**s (e.g. Ethereum) as the *mediation blockchain*, due to the fact no customization or patching of blockchain platform is needed to make it work.
 
-There could have a tree of *mediation chain*s. As long as all stakeholders of a *mediation transaction* share the same "parent" *mediation chain*, this architecture would work, just "chain" the *sequencer*s all the way up to the one on "parent" *mediation chain*, and "chain" the *mediator*s all the way down to the one on each *mediation chain* that directly connects the respective stakeholders.
+There could have a tree of *mediation blockchain*s. As long as all stakeholders of a *mediation transaction* share the same "parent" *mediation blockchain*, this architecture would work, just "chain" the *sequencer*s all the way up to the one on "parent" *mediation blockchain*, and "chain" the *mediator*s all the way down to the one on each *mediation blockchain* that directly connects the respective stakeholders.
 
-When using a tree of *mediation chain*s, all of which can share the same utility token for billing of the users and rewarding of the providers.The utility token minted on one of the *mediation chain*s and migrated to others. The utility token can even be by a organizer of the ecosystem.
+When using a tree of *mediation blockchain*s, all of which can share the same utility token for billing of the users and rewarding of the providers.The utility token minted on one of the *mediation chain*s and migrated to others. The utility token can even be by a organizer of the ecosystem.
 
 Let's use a two party coion swap example to illustrate how it works with privacy and confidentiality protection of all stakeholders. In this example, Alice and Bob have mutually decided to swap Alice's $a of A coin with Bob's $b of B coin, the following is the workflow on this architecture:
 
-1. Alice initiates a coin swap with Bob via its service, *service-x @ a* provided by her institution, *institution (a)*
-2. The *service-x @ a* by configuration (or via *contract reg* smart contract) finds that *B coin* is via *institution (b)*, so it's a cross-institution transaction, so it calls its *x-chain mediator* with all information needed
-3. The *x-chain mediator* @ *institution (a)* optionally calls its *messaging* @ *institution (a)* to send confidential data (e.g. detailed terms) to *institution (b)*. The following is a multipart example:
+1. Alice initiates a coin swap with Bob via its service, *service @ a* provided by her institution, *institution (a)*
+2. The *service @ a* by configuration (or via *contract reg* smart contract) finds that *B coin* is via *institution (b)*, so it's a cross-institution transaction, so it calls its cross-chain *facilitator* with all information needed
+3. The cross-chain *facilitator* @ *institution (a)* optionally calls its *messaging* @ *institution (a)* to send confidential data (e.g. detailed terms) to *institution (b)*. The following is a multipart example:
    ```
    Content-Type: multipart/form-data; boundary=----~~~~~~~~~~
 
@@ -108,7 +108,7 @@ Let's use a two party coion swap example to illustrate how it works with privacy
    ----~~~~~~~~~~
    ```
    Note: extra protection other than TLS *may* be needed in production.
-4. The *x-chain mediator* @ *institution (a)* sends a *mediation transaction* (*tx-{x}*) (using its *signing key*) to *mediation chain*'s *sequencer* smart contract
+4. The cross-chain *facilitator* @ *institution (a)* sends a *mediation transaction* (*tx-{x}*) (using its *signing key*) to *mediation blockchain*'s *sequencer* smart contract
     ```
     {
       "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1fea",
@@ -148,9 +148,9 @@ Let's use a two party coion swap example to illustrate how it works with privacy
       "timestamp": "{chain_id}.{block.timestamp}.{tx_idx}",
     }
     ```
-8. The *x-chain mediator* on all stakeholders of the *mediation transaction* receives the above *commit_prep_request* event, then calls the prep_commit method of its *local execuator* respectively.
-9. Each *x-chain mediator* of the stakeholders of the *mediatation transaction* (*tx-{x}*), gets the optional confidential data from its local *messaging* service by ref id, then calls its *local executor* to check authorization and fesibility and return vote (Y/N), possibly time-locks the per-contract Contract_State for commit.  
-10. Each *x-chain mediator* of the stakeholders, sends a *commit_prep_response* (*tx-{x}.0*) to the *mediator* smart contract on the *mediation chain*
+8. The cross-chain *facilitator* on all stakeholders of the *mediation transaction* receives the above *commit_prep_request* event, then calls the prep_commit method of its *local execuator* respectively.
+9. Each cross-chain *facilitator* of the stakeholders of the *mediatation transaction* (*tx-{x}*), gets the optional confidential data from its local *messaging* service by ref id, then calls its *local executor* to check authorization and fesibility and return vote (Y/N), possibly time-locks the per-contract Contract_State for commit.  
+10. Each cross-chain *facilitator* of the stakeholders, sends a *commit_prep_response* (*tx-{x}.0*) to the *mediator* smart contract on the *mediation blockchain*
     ```
     {
       "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1fea",
@@ -164,7 +164,7 @@ Let's use a two party coion swap example to illustrate how it works with privacy
       ]
     }
     ```
-11. The *mediator* smart contract on the *mediation chain*, after receiving enough consensus on *tx-{x}*, emits a *commit_exec_request* event to all stakeholders. If not enough consensus, emit *commit_exec_failed".
+11. The *mediator* smart contract on the *mediation blockchain*, after receiving enough consensus on *tx-{x}*, emits a *commit_exec_request* event to all stakeholders. If not enough consensus, emit *commit_exec_failed".
     ```
     {
         "type": "commit_exec_request",
@@ -175,9 +175,9 @@ Let's use a two party coion swap example to illustrate how it works with privacy
           ],
       }
     ```
-12. The *x-chain mediator* on all stakeholders of the *mediation transaction* receives the above *commit_exec_request* event, then calls the exec_commit method of its *local execuator* respectively and returns with the per-contract Contract_State root and opportioanlly a zero-knowledge proof (by calling its *zk_prover*).
+12. The cross-chain *facilitator* on all stakeholders of the *mediation transaction* receives the above *commit_exec_request* event, then calls the exec_commit method of its *local execuator* respectively and returns with the per-contract Contract_State root and opportioanlly a zero-knowledge proof (by calling its *zk_prover*).
 
-13. The *x-chain mediator* on all stakeholders sends a *commit_exec_response* (*tx-{x}.1*) to the *mediator* smart contract on the *mediation chain*.
+13. The cross-chain *facilitator* on all stakeholders sends a *commit_exec_response* (*tx-{x}.1*) to the *mediator* smart contract on the *mediation chain*.
     ```
     {
         "type": "commit_exec_response",
@@ -190,11 +190,11 @@ Let's use a two party coion swap example to illustrate how it works with privacy
         ]
       }
     ```
-14. The *mediator* smart contract on the *mediation chain*, after receiving all necessary *commit_exec_response*, marks the *mediation transaction* as finished and emmits *mediation succeeded* event.
+14. The *mediator* smart contract on the *mediation blockchain*, after receiving all necessary *commit_exec_response*, marks the *mediation transaction* as finished and emmits *mediation succeeded* event.
     ```
     {
         "type": "commit_exec_succeeded",
         "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1fe0",
     }
     ```   
-15. The *x-chain mediator* on *institution (a)* and *institution (b)* receives the *commit_exec_succeeded* event, forwards it to the *service-x @ a* and *service-x @ b*, which respectively notifies Alice and Bob of the status.
+15. The cross-chain *facilitator* on *institution (a)* and *institution (b)* receives the *commit_exec_succeeded* event, forwards it to the *service @ a* and *service @ b*, which respectively notifies Alice and Bob of the status.
