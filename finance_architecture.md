@@ -34,7 +34,7 @@ actor Bob
 end
 box Institutions
 participant Service
-participant "X-chain Mediator"@{"type": "control"}
+participant "X-chain_Mediator"@{"type": "control"}
 participant Local Execuator
 participant State@{"type": "database"}
 participant Prover
@@ -57,19 +57,19 @@ Sequencer -->> Topology: find mediation chain
 Sequencer -->> Sequencer: timestamp & sequence mediation tx
 Sequencer -->> Mediator: sequenced mediation transaction
 Mediator -->> X-chain Mediator: commit_prep request
-X-chain Mediator -->> Messaging: get confidential data
-X-chain Mediator -->> Local Executor: execute without commit
+X-chain_Mediator -->> Messaging: get confidential data
+X-chain_Mediator -->> Local Executor: execute without commit
 Local Executor -->> X-chain Mediator: commit prep result
-X-chain Mediator -->> Mediator: commit_prep response
+X-chain_Mediator -->> Mediator: commit_prep response
 Mediator -->> Mediator: collect commit_prep responses util decision threshold
-Mediator -->> X-chain Mediator: emit commit_exec request
-X-chain Mediator -->> Local Executor: commit tx
+Mediator -->> X-chain_Mediator: emit commit_exec request
+X-chain_Mediator -->> Local Executor: commit tx
 Local Executor -->> Prover: generate proof
 Local Executor -->> X-chain Mediator: status, per-contract state root, zero-knowledge proof
 Local Executor -->> State: commit per-contract state
-X-chain Mediator -->> Mediator: commit_exec response
-Mediator -->> X-chain Mediator: emit commit_exec_succeeded or commit_exec_failed event
-X-chain Mediator -->> Service: mediation tx result
+X-chain_Mediator -->> Mediator: commit_exec response
+Mediator -->> X-chain_Mediator: emit commit_exec_succeeded or commit_exec_failed event
+X-chain_Mediator -->> Service: mediation tx result
 Service -->> Alice: coin swap result
 Service --> Bob: coin swap result
 ```
