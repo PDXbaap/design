@@ -12,13 +12,13 @@ This document records JZ's architecure proposals on tokenized finance, with the 
 
 ## Preface
 
-PDX has been supporting totally private smart contracts without weakening consensus strength on its Utopia blockchain platform since 2017. It does this via a patent-awarded technology internally called "selective-existence of data and code" on blockchain nodes, meaning only the nodes trusted by the stakeholders of business collaboration posess the sensitive data (state) and code (logic) of that collaboration. What canton can achieve is already achieved on PDX Utopia blockchain - some caveat or loose end may exist though.
+PDX has been supporting totally private smart contracts without weakening consensus strength on its Utopia blockchain platform since 2017. It does this via a patent-awarded technology internally called "selective-existence of data and code" on blockchain nodes, meaning only the nodes trusted by the stakeholders of business collaboration posess the sensitive data (Contract_State) and code (logic) of that collaboration. What canton can achieve is already achieved on PDX Utopia blockchain - some caveat or loose end may exist though.
 
 PDX Utopia blockchain is fully compliant with Ethereum EVM and its web3 API. Besides its support on totally private smart contracts, PDX Utopia has quite some unique capabilities, such as:
 
 1. *Asynchronous consensus* A scalable, performant, asynchronous consensus algorithm achieving fair consensus (each node with one vote) with O(n) complexity, also known as PDX consensus
   
-2. *Asynchronous ledgering* Each smart contract cluster has its own distinguished world state that does not interfere with other smart contract clusters, hence can independenly execute without interfering each other.
+2. *Asynchronous ledgering* Each smart contract cluster has its own distinguished world Contract_State that does not interfere with other smart contract clusters, hence can independenly execute without interfering each other.
   
 3. *Parallel TX processing* Transactions destined for unrelated smart contracts are processed in parallel; related smart contracts auto-organized into a "smart contract cluster".
 
@@ -34,9 +34,9 @@ actor Bob
 end
 box Institutions
 participant Service
-participant facilitator@{"type": "control"}
-participant Local Executor
-participant State@{"type": "database"}
+participant Facilitator@{"type": "control"}
+participant Executor
+participant Contract_state@{"type": "database"}
 participant Prover
 participant Messaging
 end
@@ -48,28 +48,28 @@ participant Mediator@{"type": "control"}
 end
 Alice -->> Bob: get Bob's conditional authorization
 Alice -->> Service: initiate coin swap
-Service -->> facilitator: request for cross-institution mediation
-facilitator -->> Messaging: confidential data for mediation tx with end2end security
-facilitator -->> facilitator: create & sign mediation tx
-facilitator -->> Sequencer: mediation tx
+Service -->> Facilitator: request for cross-institution mediation
+Facilitator -->> Messaging: confidential data for mediation tx with end2end security
+Facilitator -->> Facilitator: create & sign mediation tx
+Facilitator -->> Sequencer: mediation tx
 Sequencer -->> Identity: check authorization
 Sequencer -->> Topology: find mediation chain
 Sequencer -->> Sequencer: timestamp & sequence mediation tx
 Sequencer -->> Mediator: sequenced mediation transaction
-Mediator -->> facilitator: commit_prep request
-facilitator -->> Messaging: get confidential data
-facilitator -->> Local Executor: execute without commit
-Local Executor -->> facilitator: commit prep result
-facilitator -->> Mediator: commit_prep response
+Mediator -->> Facilitator: commit_prep request
+Facilitator -->> Messaging: get confidential data
+Facilitator -->> Executor: execute without commit
+Executor -->> Facilitator: commit prep result
+Facilitator -->> Mediator: commit_prep response
 Mediator -->> Mediator: collect commit_prep responses util decision threshold
-Mediator -->> facilitator: emit commit_exec request
-facilitator -->> Local Executor: commit tx
-Local Executor -->> State: commit per-contract state
-Local Executor -->> Prover: generate proof
-Local Executor -->> facilitator: status, per-contract state root, zero-knowledge proof
-facilitator -->> Mediator: commit_exec response
-Mediator -->> facilitator: emit commit_exec_succeeded or commit_exec_failed event
-facilitator -->> Service: mediation tx result
+Mediator -->> Facilitator: emit commit_exec request
+Facilitator -->> Executor: commit tx
+Executor -->> Contract_state: commit per-contract state
+Executor -->> Prover: generate proof
+Executor -->> Facilitator: status, per-contract state root, zero-knowledge proof
+Facilitator -->> Mediator: commit_exec response
+Mediator -->> Facilitator: emit commit_exec_succeeded or commit_exec_failed event
+Facilitator -->> Service: mediation tx result
 Service -->> Alice: coin swap result
 Service --> Bob: coin swap result
 ```
@@ -149,14 +149,14 @@ Let's use a two party coion swap example to illustrate how it works with privacy
     }
     ```
 8. The *x-chain mediator* on all stakeholders of the *mediation transaction* receives the above *commit_prep_request* event, then calls the prep_commit method of its *local execuator* respectively.
-9. Each *x-chain mediator* of the stakeholders of the *mediatation transaction* (*tx-{x}*), gets the optional confidential data from its local *messaging* service by ref id, then calls its *local executor* to check authorization and fesibility and return vote (Y/N), possibly time-locks the per-contract state for commit.  
+9. Each *x-chain mediator* of the stakeholders of the *mediatation transaction* (*tx-{x}*), gets the optional confidential data from its local *messaging* service by ref id, then calls its *local executor* to check authorization and fesibility and return vote (Y/N), possibly time-locks the per-contract Contract_State for commit.  
 10. Each *x-chain mediator* of the stakeholders, sends a *commit_prep_response* (*tx-{x}.0*) to the *mediator* smart contract on the *mediation chain*
     ```
     {
       "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1fea",
       "type": "commit_prep_response",
       "vote": "YES | NO",
-      "stat": "SHA3 of per-contract state root", # optional
+      "stat": "SHA3 of per-contract Contract_State root", # optional
       "proof": "zero knowledge proof", # optional
       "parties": [ # unless deligated, only one tied to signing key will be taken.
           {"uuid": "af627cae-eee9-47e9-aa6a-5ae9435b1feA"},
@@ -175,14 +175,14 @@ Let's use a two party coion swap example to illustrate how it works with privacy
           ],
       }
     ```
-12. The *x-chain mediator* on all stakeholders of the *mediation transaction* receives the above *commit_exec_request* event, then calls the exec_commit method of its *local execuator* respectively and returns with the per-contract state root and opportioanlly a zero-knowledge proof (by calling its *zk_prover*).
+12. The *x-chain mediator* on all stakeholders of the *mediation transaction* receives the above *commit_exec_request* event, then calls the exec_commit method of its *local execuator* respectively and returns with the per-contract Contract_State root and opportioanlly a zero-knowledge proof (by calling its *zk_prover*).
 
 13. The *x-chain mediator* on all stakeholders sends a *commit_exec_response* (*tx-{x}.1*) to the *mediator* smart contract on the *mediation chain*.
     ```
     {
         "type": "commit_exec_response",
         "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1fe0",
-        "stat": "SHA3 of per-contract state root", # optional
+        "stat": "SHA3 of per-contract Contract_State root", # optional
         "proof": "zero knowledge proof", # optional
         "parties": [ # unless deligated, only one tied to signing key will be taken.
             {"uuid": "af627cae-eee9-47e9-aa6a-5ae9435b1feA"},
