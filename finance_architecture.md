@@ -30,6 +30,8 @@ This architecture is meant to work via not only **consortium blockchain**s but a
 
 There could have a tree of *mediation chain*s. As long as all stakeholders of a *mediation transaction* share the same "parent" *mediation chain*, this architecture would work, just "chain" the *sequencer*s all the way up to the one on "parent" *mediation chain*, and "chain" the *mediator*s all the way down to the one on each *mediation chain* that directly connects the respective stakeholders.
 
+When using a tree of *mediation chain*s, all of which can share the same utility token for billing of the users and rewarding of the providers.The utility token minted on one of the *mediation chain*s and migrated to others. The utility token can even be by a organizer of the ecosystem.
+
 Let's use a two party coion swap example to illustrate how it works with privacy and confidentiality protection of all stakeholders. In this example, Alice and Bob have mutually decided to swap Alice's $a of A coin with Bob's $b of B coin, the following is the workflow on this architecture:
 
 1. Alice initiates a coin swap with Bob via its service, *service-x @ a* provided by her institution, *institution (a)*
