@@ -55,7 +55,7 @@ X-chain Mediator --> Messaging: get confidential data
 X-chain Mediator --> Local Executor: execute without commit
 Local Executor --> X-chain Mediator: commit prep result
 X-chain Mediator --> Mediator: commit_prep response
-Mediator: collect commit_prep responses util decision threshold
+Mediator -> Mediator: collect commit_prep responses util decision threshold
 Mediator --> X-chain Mediator: emit commit_exec request
 X-chain Mediator --> Local Executor: commit tx
 Local Executor --> Prover: generate proof
