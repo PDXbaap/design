@@ -34,7 +34,7 @@ actor Bob
 end
 box Institutions
 participant Service
-participant X-chain Mediator@{"type": "control"}
+participant X-chain Mediator
 participant Local Execuator
 participant State@{"type": "database"}
 participant Prover
