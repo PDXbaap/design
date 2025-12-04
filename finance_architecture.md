@@ -22,7 +22,7 @@ PDX Utopia blockchain is fully compliant with Ethereum EVM and its web3 API. Bes
   
 3. *Parallel TX processing* Transactions destined for unrelated smart contracts are processed in parallel; related smart contracts auto-organized into a "smart contract cluster".
 
-## Option 1: On Blockchain 
+## Option 1: SC + Oracle 
 
 ![plot](./x-chain-finance-architecture.png)
 
