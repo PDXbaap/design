@@ -70,7 +70,7 @@ Let's use a two party coion swap example to illustrate how it works with privacy
       ]
     }
     ```
-Note: party id better be some integer format with scheme for performance reasons.
+    Note: party id better be some integer format with scheme for performance reasons.
 5. After checking with *identity* smart contract for authorization, the *sequencer* smart contract automatically timestamps, sequences *tx-{x}* and calls the *mediator* smart contract.
     ```
     {
