@@ -34,7 +34,7 @@ actor Bob
 end
 box Institutions
 participant Service
-participant X-chain Mediator
+participant X-chain Mediator@{"type": "control"}
 participant Local Execuator
 participant State@{"type": "database"}
 participant Prover
@@ -43,8 +43,8 @@ end
 box Mediation Blockchains
 participant Identity
 participant Topology
-participant Sequencer
-participant Mediator
+participant Sequencer@{"type": "queue"}
+participant Mediator@{"type": "control"}
 end
 Alice --> Bob: get Bob's conditional authorization
 Alice -->> Service: initiate coin swap
@@ -55,7 +55,7 @@ X-chain Mediator -->> Sequencer: mediation tx
 Sequencer -->> Identity: check authorization
 Sequencer -->> Topology: find mediation chain
 Sequencer -->> Sequencer: timestamp & sequence mediation tx
-Sequencer -->> Mediator: timestamped mediation transaction
+Sequencer -->> Mediator: sequenced mediation transaction
 Mediator -->> X-chain Mediator: commit_prep request
 X-chain Mediator -->> Messaging: get confidential data
 X-chain Mediator -->> Local Executor: execute without commit
