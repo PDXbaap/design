@@ -45,7 +45,10 @@ Service -->> X-chain Mediator: request for cross-institution mediation
 X-chain Mediator -->> X-chain Mediator: create & sign mediation tx
 X-chain Mediator -->> Sequencer: mediation tx
 Sequencer --> Identity: check authorization
-Sequencer --> Topology: find mediation chain 
+Sequencer --> Topology: find mediation chain
+Sequencer --> Sequencer: timestamp & sequence mediation tx
+Sequencer --> Mediator: timestamped mediation transaction
+Mediator --> X-chain Mediator: commit_prep request
 ```
 
 This architecture is meant to work via not only **consortium blockchain**s but also **public blockchain**s (e.g. Ethereum) as the *mediation chain*, due to the fact no customization or patching of blockchain platform is needed to make it work.
