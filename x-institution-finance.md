@@ -36,7 +36,7 @@ box Institutions
 participant Service
 participant Facilitator@{"type": "control"}
 participant Executor
-participant Contract_state@{"type": "database"}
+participant Ledger@{"type": "database"}
 participant Prover
 participant Messaging
 end
@@ -64,7 +64,7 @@ Facilitator -->> Mediator: commit_prep response
 Mediator -->> Mediator: collect commit_prep responses util decision threshold
 Mediator -->> Facilitator: emit commit_exec request
 Facilitator -->> Executor: commit tx
-Executor -->> Contract_state: commit per-contract state
+Executor -->> Ledger: commit per-contract state
 Executor -->> Prover: generate proof
 Executor -->> Facilitator: status, per-contract state root, zero-knowledge proof
 Facilitator -->> Mediator: commit_exec response
