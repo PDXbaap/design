@@ -1,4 +1,4 @@
-![plot](./private-on-public-chain.png)
+![plot](./private-on-public-chain-v2.png)
 
 
 
