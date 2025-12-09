@@ -6,4 +6,4 @@ Based on JZ's patent on private smart contract and ledger on public/consortium b
 7. per-contract state proof for easy verification w/ zero knowledge (or not)
 8. Easily support multiple mediation blockchains, just, 1) sender submits different sub-transations to its specific mediator chain; 2) private facilitator implements deternimistic sequencing from multiple mediator chains.
 
-![plot](./x-chain-collaboration.png)
+![plot](./x-chain-collaboration-v2.png)
