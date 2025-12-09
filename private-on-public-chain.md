@@ -3,10 +3,10 @@ sequenceDiagram
 participant owner
 participant sender
 participant httpd
-box blockchain
+box public_blockchain
 participant mediator
 end
-box stakeholder
+box private_stakeholder
 participant facilitator
 participant executor
 participant private_smart_contract
