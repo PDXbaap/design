@@ -1,3 +1,7 @@
+![plot](./private-on-public-chain.png)
+
+
+
 ```mermaid
 sequenceDiagram
 participant owner
