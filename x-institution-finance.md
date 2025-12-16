@@ -31,7 +31,7 @@ PDX Utopia blockchain is fully compliant with Ethereum EVM and its web3 API. Bes
 
 2. Mediation highlights: 1) all on-chain as smart contracts, transparent & deterministic; 2) no re-inventing the wheels.
    
-3. Facilitator highlights: 1) deterministic ordering of x-mediation-blockchain txs (by the blockchain alread); 2) negotiation  of mediation blockchain for collaborations; 3) active-active or active-passive facilitator cluster(s)
+3. Facilitator highlights: 1) deterministic ordering of x-mediation-blockchain txs (by the blockchain already); 2) negotiation  of mediation blockchain for collaborations; 3) active-active or active-passive facilitator cluster(s)
 
 4. Executor highlights: 1) lightweight consensus: only on state, since sequencing done at mediation blockchain; 2) totally private & verifiable ledger; 3) fine-grained privacy scope at contract, institution or consortium level; 4) multi-stack compliant & co-existence: daml, solidity, or chaincode; 4) geth/fabric: state emission for fine-grained consensus.
 
