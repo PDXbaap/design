@@ -89,6 +89,8 @@ There could have a tree of *mediation blockchain*s. As long as all stakeholders 
 
 When using a tree of *mediation blockchain*s, all of which can share the same utility token for billing of the users and rewarding of the providers.The utility token minted on one of the *mediation chain*s and migrated to others. The utility token can even be by a organizer of the ecosystem.
 
+Note: 1) sequencer is "logical", since mediation blockchain already sequences the transactions; 2) traversal of mediation blockchains is not necessary if each facilitator has deterministric sequencing of events (and its processing) from multiple mediation chains.
+
 Let's use a two party coion swap example to illustrate how it works with privacy and confidentiality protection of all stakeholders. In this example, Alice and Bob have mutually decided to swap Alice's $a of A coin with Bob's $b of B coin, the following is the workflow on this architecture:
 
 1. Alice initiates a coin swap with Bob via its service, *service @ a* provided by her institution, *institution (a)*
@@ -184,7 +186,7 @@ Let's use a two party coion swap example to illustrate how it works with privacy
           ],
       }
     ```
-12. The cross-chain *facilitator* on all stakeholders of the *mediation transaction* receives the above *commit_exec_request* event, then calls the exec_commit method of its *local execuator* respectively and returns with the per-contract Contract_State root and opportioanlly a zero-knowledge proof (by calling its *zk_prover*).
+12. The cross-chain *facilitator* on all stakeholders of the *mediation transaction* receives the above *commit_exec_request* event, then calls the exec_commit method of its *local execuator* respectively and returns with the per-contract contract_state root and optioanlly a zero-knowledge proof (by calling its *zk_prover*).
 
 13. The cross-chain *facilitator* on all stakeholders sends a *commit_exec_response* (*tx-{x}.1*) to the *mediator* smart contract on the *mediation chain*.
     ```
