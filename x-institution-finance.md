@@ -12,13 +12,13 @@ This document records JZ's architecure proposals on tokenized finance, with the 
 
 ## Preface
 
-PDX has been supporting totally private smart contracts without weakening consensus strength on its Utopia blockchain platform since 2017. It does this via a patent-awarded technology internally called "selective-existence of data and code" on blockchain nodes, meaning only the nodes trusted by the stakeholders of business collaboration posess the sensitive data (Contract_State) and code (logic) of that collaboration. What canton can achieve is already achieved on PDX Utopia blockchain - some caveat or loose end may exist though.
+PDX has been supporting totally private smart contracts without weakening consensus strength on its Utopia blockchain platform since 2017. It does this via a patent-awarded technology internally called "selective-existence of data and code" on blockchain nodes, meaning only the nodes trusted by the stakeholders of business collaboration posess the sensitive data (contract_state) and code (logic) of that collaboration. What canton can achieve is already achieved on PDX Utopia blockchain - some caveat or loose end may exist though.
 
 PDX Utopia blockchain is fully compliant with Ethereum EVM and its web3 API. Besides its support on totally private smart contracts, PDX Utopia has quite some unique capabilities, such as:
 
 1. *Asynchronous consensus* A scalable, performant, asynchronous consensus algorithm achieving fair consensus (each node with one vote) with O(n) complexity, also known as PDX consensus
   
-2. *Asynchronous ledgering* Each smart contract cluster has its own distinguished world Contract_State that does not interfere with other smart contract clusters, hence can independenly execute without interfering each other.
+2. *Asynchronous ledgering* Each smart contract cluster has its own distinguished world contract_state that does not interfere with other smart contract clusters, hence can independenly execute without interfering each other.
   
 3. *Parallel TX processing* Transactions destined for unrelated smart contracts are processed in parallel; related smart contracts auto-organized into a "smart contract cluster".
 
@@ -26,12 +26,12 @@ PDX Utopia blockchain is fully compliant with Ethereum EVM and its web3 API. Bes
 
 ![plot](./x-institution-finance-v3.png)
 
-1. Blockchain highlights: 1) realtime per-contract state emission; 2) totally private ledger sensitive smart contracts; 3) fasted inclusion for authorized feeder txs
-scalable, available and decentralized feeder network; 4) active-active or active-passive facilitator cluster
+1. Blockchain highlights: 1) realtime per-contract state emission; 2) totally private ledger for sensitive smart contracts; 3) fasted inclusion for authorized feeder txs ( higher gas price, mitigated/rewarded by mediator/executor later);
+4) scalable, available and decentralized feeder network (via blockchain or available redundant cluster via universal hashing; 5) active-active or active-passive facilitator cluster(s)
 
 2. Mediation highlights: 1) all on-chain as smart contracts, transparent & deterministic; 2) no re-inventing the wheels.
    
-3. Facilitator highlights: 1) deterministic ordering of x-mediation-blockchain txs; 2) negotiation  of mediation blockchain for collaborations; 3) active-active or active-passive facilitator cluster
+3. Facilitator highlights: 1) deterministic ordering of x-mediation-blockchain txs (by the blockchain alread); 2) negotiation  of mediation blockchain for collaborations; 3) active-active or active-passive facilitator cluster(s)
 
 4. Executor highlights: 1) lightweight consensus: only on state, since sequencing done at mediation blockchain; 2) totally private & verifiable ledger; 3) fine-grained privacy scope at contract, institution or consortium level; 4) multi-stack compliant & co-existence: daml, solidity, or chaincode; 4) geth/fabric: state emission for fine-grained consensus.
 
@@ -158,14 +158,14 @@ Let's use a two party coion swap example to illustrate how it works with privacy
     }
     ```
 8. The cross-chain *facilitator* on all stakeholders of the *mediation transaction* receives the above *commit_prep_request* event, then calls the prep_commit method of its *local execuator* respectively.
-9. Each cross-chain *facilitator* of the stakeholders of the *mediatation transaction* (*tx-{x}*), gets the optional confidential data from its local *messaging* service by ref id, then calls its *local executor* to check authorization and fesibility and return vote (Y/N), possibly time-locks the per-contract Contract_State for commit.  
+9. Each cross-chain *facilitator* of the stakeholders of the *mediatation transaction* (*tx-{x}*), gets the optional confidential data from its local *messaging* service by ref id, then calls its *local executor* to check authorization and fesibility and return vote (Y/N), possibly time-locks the per-contract contract_state for commit.  
 10. Each cross-chain *facilitator* of the stakeholders, sends a *commit_prep_response* (*tx-{x}.0*) to the *mediator* smart contract on the *mediation blockchain*
     ```
     {
       "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1fea",
       "type": "commit_prep_response",
       "vote": "YES | NO",
-      "stat": "SHA3 of per-contract Contract_State root", # optional
+      "stat": "SHA3 of per-contract contract_state root", # optional
       "proof": "zero knowledge proof", # optional
       "parties": [ # unless deligated, only one tied to signing key will be taken.
           {"uuid": "af627cae-eee9-47e9-aa6a-5ae9435b1feA"},
@@ -191,7 +191,7 @@ Let's use a two party coion swap example to illustrate how it works with privacy
     {
         "type": "commit_exec_response",
         "ref": "af627cae-eee9-47e9-aa6a-5ae9435b1fe0",
-        "stat": "SHA3 of per-contract Contract_State root", # optional
+        "stat": "SHA3 of per-contract contract_state root", # optional
         "proof": "zero knowledge proof", # optional
         "parties": [ # unless deligated, only one tied to signing key will be taken.
             {"uuid": "af627cae-eee9-47e9-aa6a-5ae9435b1feA"},
