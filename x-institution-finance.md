@@ -209,3 +209,6 @@ Let's use a two party coion swap example to illustrate how it works with privacy
     }
     ```   
 15. The cross-chain *facilitator* on *institution (a)* and *institution (b)* receives the *commit_exec_succeeded* event, forwards it to the *service @ a* and *service @ b*, which respectively notifies Alice and Bob of the status.
+
+
+![plot](./x-chain-architecture.png)
